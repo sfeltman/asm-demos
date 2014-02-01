@@ -214,8 +214,8 @@ _start:
     for_each_event:
       cmp r15, 0
       je end_for_each_event
-
-      push r15          ; ensure our loop counter is not modified
+      dec r15            ; decrement the epoll event count
+      push r15           ; ensure our loop counter is not modified
 
       ; ensure the event matches something we registered (although it probably must)
       mov edi, [the_events + r15 + epoll_event_fd.fd]
@@ -231,7 +231,6 @@ _start:
       call write
 
       pop r15
-      dec r15            ; decrement the epoll event count
       jmp for_each_event
     end_for_each_event:
 
