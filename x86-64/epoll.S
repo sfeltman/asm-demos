@@ -59,9 +59,9 @@
 .set EPOLLPRI, 0x002
 .set EPOLLOUT, 0x004
 
-.set EPOLL_CTL_ADD, 1  /* Add a file decriptor to the interface.  */
-.set EPOLL_CTL_DEL, 2  /* Remove a file decriptor from the interface.  */
-.set EPOLL_CTL_MOD, 3  /* Change file decriptor epoll_event structure.  */
+.set EPOLL_CTL_ADD, 1
+.set EPOLL_CTL_DEL, 2
+.set EPOLL_CTL_MOD, 3
 
 
 /* struct epoll_event */
