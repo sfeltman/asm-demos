@@ -225,8 +225,12 @@ _start:
       dec r15            ; decrement the epoll event count
       push r15           ; ensure our loop counter is not modified
 
-      ; ensure the event matches something we registered (although it probably must)
-      mov edi, [the_events + r15 + epoll_event_fd.fd]
+      ; we cannot use sib byte scale because our struct is larger than 8 bytes
+      mov rax, r15
+      imul rax, epoll_event.struc_size
+      mov edi, dword [the_events + rax + epoll_event_fd.fd]
+
+      ; ensure the event fd matches the one we registered (although it probably must)
       cmp edi, stdin
       jne unknown_fd_error
       mov rsi, buffer

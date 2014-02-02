@@ -275,8 +275,12 @@ _start:
       jl main_error
       dec r15           /* decrement the epoll event count/index */
 
-      /* ensure the event matches something we registered (although it probably must) */
-      mov edi, [offset the_events + r15 + epoll_event.fd]
+      /* we cannot use sib byte scale because our struct is larger than 8 bytes */
+      mov rax, r15
+      imul rax, epoll_event.size
+      mov edi, [offset the_events + rax + epoll_event.fd]
+
+      /* ensure the event fd matches the one we registered (although it probably must) */
       cmp edi, stdin
       jne unknown_fd_error
       mov rsi, offset buffer
