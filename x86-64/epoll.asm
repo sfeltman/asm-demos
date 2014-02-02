@@ -215,15 +215,13 @@ _start:
     mov r10, -1
     call epoll_wait
 
-    mov r15, rax  ; keep event count in r15
-    cmp r15, -1
-    je main_error
+    mov r15, rax  ; keep event counter/index in r15
 
     for_each_event:
       cmp r15, 0
-      je end_for_each_event
+      je main_loop
+      jl main_error
       dec r15            ; decrement the epoll event count
-      push r15           ; ensure our loop counter is not modified
 
       ; we cannot use sib byte scale because our struct is larger than 8 bytes
       mov rax, r15
@@ -242,9 +240,7 @@ _start:
       mov rdx, rax       ; from call to read
       call write
 
-      pop r15
       jmp for_each_event
-    end_for_each_event:
 
     jmp main_loop
 
